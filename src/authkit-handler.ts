@@ -109,13 +109,16 @@ app.post("/authorize", async (c) => {
 
 function redirectToAuthKit(c: any, stateToken: string, headers: Record<string, string> = {}) {
 	const workOS = c.get("workOS");
+
+	const redirectUri = c.env.WORKOS_REDIRECT_URI;
+
 	return new Response(null, {
 		headers: {
 			...headers,
 			location: workOS.userManagement.getAuthorizationUrl({
 				provider: "authkit",
 				clientId: c.env.WORKOS_CLIENT_ID,
-				redirectUri: new URL("/callback", c.req.url).href,
+				redirectUri,
 				state: stateToken,
 			}),
 		},
